@@ -18,6 +18,8 @@ const bodyParser = require('body-parser');
 //const server = http.createServer(routes.handler);
 const app = express();
 
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 // app.use((req, res, next) => {
 //   console.log('in the middleware choro');
 //   next(); // allows the request to continue to the next middleware in line
@@ -34,19 +36,8 @@ app.use(
   }),
 );
 
-app.use('/add-product', (req, res, next) => {
-  // console.log('in another middleware choro');
-  res.send('<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add product</button></form>');
-});
+app.use(adminRoutes);
+app.use(shopRoutes);
 
-app.post('/product', (req, res, next) =>{
-  console.log(req.body);
-  res.redirect('/');
-});
-
-app.use('/', (req, res, next) => {
-  // console.log('in another middleware choro');
-  res.send('<h1>Hello from express!</h1>');
-});
 
 app.listen(3000);
