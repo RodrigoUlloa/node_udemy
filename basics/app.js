@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 //const routes = require('./routes');
 // function rqListener(req, res){
@@ -22,18 +23,29 @@ const app = express();
 //   next(); // allows the request to continue to the next middleware in line
 // });
 
-app.use('/', (req, res, next) => {
-  console.log('This always run');
-  next();
-});
+// app.use('/', (req, res, next) => {
+//   console.log('This always run');
+//   next();
+// });
+
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  }),
+);
 
 app.use('/add-product', (req, res, next) => {
-  console.log('in another middleware choro');
-  res.send('<h1>The "Add Product" Page</h1>');
+  // console.log('in another middleware choro');
+  res.send('<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add product</button></form>');
+});
+
+app.post('/product', (req, res, next) =>{
+  console.log(req.body);
+  res.redirect('/');
 });
 
 app.use('/', (req, res, next) => {
-  console.log('in another middleware choro');
+  // console.log('in another middleware choro');
   res.send('<h1>Hello from express!</h1>');
 });
 
