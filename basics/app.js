@@ -19,6 +19,9 @@ const bodyParser = require('body-parser');
 //const server = http.createServer(routes.handler);
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', 'views');
+
 const adminData = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 // app.use((req, res, next) => {
