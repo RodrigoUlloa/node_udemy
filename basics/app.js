@@ -34,7 +34,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-const adminData = require('./routes/admin');
+//const adminData = require('./routes/admin');
+const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop');
 // app.use((req, res, next) => {
 //   console.log('in the middleware choro');
@@ -53,10 +54,10 @@ app.use(
 );
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/admin', adminData.routes);
+app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
-app.use((req, res, next) =>{
+app.use((req, res, next) => {
   // res.status(404).send('<h1>Page not found</h1>');
   //res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
   res.status(404).render('404', {pageTitle: 'Page not Found'});
