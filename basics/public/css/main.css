@@ -158,6 +158,7 @@ form {
 }
 
 .card__image {
+  text-align: center;
   width: 100%;
 }
 
