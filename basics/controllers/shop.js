@@ -3,16 +3,16 @@ const Cart = require('../models/cart');
 //const products = []; 
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
-    res.render('shop/product-list', {
-      prods: products,
-      pageTitle: 'All Products',
-      path: '/'
-      // hasProducts: products.length > 0,
-      // activeShop: true,
-      // productCSS: true
-    });
-  });
+
+  Product.fetchAll()
+    .then((result) => {
+      res.render('shop/product-list', {
+        prods: result.rows,
+        pageTitle: 'All Products',
+        path: '/'
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getProduct = (req, res, next) => {
@@ -36,7 +36,6 @@ exports.getIndex = (req, res, next) => {
       });
     })
     .catch(err => console.log(err));
-  
 };
 
 exports.postCart = (req, res, next) => {
