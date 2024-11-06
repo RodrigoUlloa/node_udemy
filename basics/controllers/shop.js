@@ -27,13 +27,16 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll(products => {
-    res.render('shop/index', {
-      prods: products,
-      pageTitle: 'Shop',
-      path: '/',
-    });
-  });
+  Product.fetchAll()
+    .then((result) => {
+      res.render('shop/index', {
+        prods: result.rows,
+        pageTitle: 'Shop',
+        path: '/',
+      });
+    })
+    .catch(err => console.log(err));
+  
 };
 
 exports.postCart = (req, res, next) => {
