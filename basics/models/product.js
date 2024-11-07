@@ -20,8 +20,7 @@
 const db = require('..//util//database');
 const Cart = require('./cart');
 module.exports = class Product {
-  constructor(id, title, imageUrl, description, price) {
-    this.id = id;
+  constructor(title, imageUrl, description, price) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
@@ -29,6 +28,11 @@ module.exports = class Product {
   }
 
   save() {
+    return db.query(
+      'INSERT INTO products (title, price, description, "imageUrl") VALUES ($1, $2, $3, $4)',
+      [this.title, this.price, this.description, this.imageUrl]
+    ); //ajustar query para la libreria pg
+
     // getProductsFromFile(products => {
     //   if (this.id) {
     //     const existingProductIndex = products.findIndex(
@@ -61,7 +65,7 @@ module.exports = class Product {
     // });
   }
 
-  static fetchAll(cb) {
+  static fetchAll() {
     // getProductsFromFile(cb); we dont need callback
     return db.query('SELECT * FROM products');
   }
