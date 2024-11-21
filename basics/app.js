@@ -20,7 +20,7 @@ const bodyParser = require('body-parser');
 
 //const server = http.createServer(routes.handler);
 const app = express();
-
+const db = require('./util/database');
 // app.engine(
 //   'hbs',
 //   expressHbs({
@@ -29,6 +29,18 @@ const app = express();
 //     extname: 'hbs'
 //   })
 // );
+
+// testing in bd
+// db.query('SELECT * FROM products')
+//   .then(result => {
+//     // result.rows.forEach(row => {
+//     //   console.log(row.title);
+//     // })
+//     result.rows
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
 
 const errorController = require('./controllers/error');
 
