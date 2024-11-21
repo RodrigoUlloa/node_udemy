@@ -3,7 +3,6 @@ const Cart = require('../models/cart');
 //const products = []; 
 
 exports.getProducts = (req, res, next) => {
-
   Product.fetchAll()
     .then((result) => {
       res.render('shop/product-list', {
@@ -16,14 +15,20 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
+
   const prodId = req.params.productId;
-  Product.findById(prodId, product => {
-    res.render('shop/product-detail', {
-      product: product, 
-      pageTitle: product.pageTitle,
-      path: '/products'
-    });
-  });
+  Product.findById(prodId)
+    .then((result) => {
+      if (result.rows.length > 0) {
+      res.render('shop/product-detail', {
+        product: result.rows[0],
+        pageTitle: result.rows[0].title,
+        path: '/products',
+      });
+    } else {
+      res.redirect('/'); 
+    }
+  }).catch(err => console.log(err));
 };
 
 exports.getIndex = (req, res, next) => {

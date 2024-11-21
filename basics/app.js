@@ -33,7 +33,10 @@ const db = require('./util/database');
 // testing in bd
 // db.query('SELECT * FROM products')
 //   .then(result => {
-//     console.log(result.rows, result.fields);
+//     // result.rows.forEach(row => {
+//     //   console.log(row.title);
+//     // })
+//     result.rows
 //   })
 //   .catch(err => {
 //     console.log(err);

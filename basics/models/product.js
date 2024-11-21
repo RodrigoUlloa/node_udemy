@@ -29,8 +29,8 @@ module.exports = class Product {
 
   save() {
     return db.query(
-      'INSERT INTO products (title, price, description, "imageUrl") VALUES ($1, $2, $3, $4)',
-      [this.title, this.price, this.description, this.imageUrl]
+      'INSERT INTO products (title, description, price, "imageUrl") VALUES ($1, $2, $3, $4)',
+      [this.title, this.description, this.price, this.imageUrl]
     ); //ajustar query para la libreria pg
 
     // getProductsFromFile(products => {
@@ -70,10 +70,11 @@ module.exports = class Product {
     return db.query('SELECT * FROM products');
   }
 
-  static findById(id, cb) {
+  static findById(id) {
     // getProductsFromFile(products => {
     //   const product = products.find(p => p.id === id);
     //   cb(product);
     // }); -> we dont need a callback
+    return db.query('SELECT * FROM products WHERE products.id = $1', [id] );
   }
 };
