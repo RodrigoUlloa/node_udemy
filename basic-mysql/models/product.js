@@ -17,7 +17,7 @@ class Product {
       //Update de product
       dbOp = db.collection('products').updateOne({_id: this._id}, {$set: this});
     } else {
-      dbOp = db.collection('products').insertOne(this)
+      dbOp = db.collection('products').insertOne(this);
     }
     
     return dbOp
