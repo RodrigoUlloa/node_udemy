@@ -1,5 +1,19 @@
-basics/node_modules/
 first-app.js
-assignment2/node_modules/
-assigment3/node_modules/
-assignment4/node_modules/
+# Ignorar todas las carpetas node_modules
+**/node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Archivos de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Directorios de caché
+.npm
+.eslintcache
