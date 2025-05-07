@@ -1,10 +1,11 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
+const {MONGO_DB} = process.env
 let _db;
  
 const mongoConnect = (callback) => {
   MongoClient.connect(
-    "mongodb+srv://rodrigo:nPrKktz3NJiLVMLG@cluster0.5hz69.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    MONGO_DB,
     { autoSelectFamily: false }
   )
     .then((client) => {
