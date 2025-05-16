@@ -1,6 +1,6 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
-const {MONGO_DB} = process.env
+const {MONGO_DB} = process.env;
 let _db;
  
 const mongoConnect = (callback) => {
