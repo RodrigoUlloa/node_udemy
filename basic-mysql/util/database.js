@@ -1,11 +1,11 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
-const {MONGO_DB} = process.env;
+const {MONGODB_URI} = process.env;
 let _db;
  
 const mongoConnect = (callback) => {
   MongoClient.connect(
-    MONGO_DB,
+    MONGODB_URI,
     { autoSelectFamily: false }
   )
     .then((client) => {
