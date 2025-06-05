@@ -68,7 +68,7 @@ exports.postLogin = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
+
   const errors = validationResult(req);
   if(!errors.isEmpty()){
     console.log(errors.array());
@@ -78,39 +78,30 @@ exports.postSignup = (req, res, next) => {
       errorMessage: errors.array()[0].msg
     });;
   }
-  User.findOne({email: email})
-  .then( userDoc => {
-    if (userDoc) {
-      req.flash('error', 'Email exists already, plase pick a different one.');
-      return res.redirect('/signup');
-    }
-    return bycrpt
-    .hash(password, 12)
-    .then(hashedPassword => {
-      const user = new User({
-        email: email,
-        password: hashedPassword,
-        cart: { items: [] }
-      });
-      return user.save();
-    })
-    .then(result => {
-      res.redirect('/login');
-      return sendMail.send({
-        to: email,
-        from: "rodrigo.ulloa@proton.me",
-        subject: "Signup succeeded! ",
-        text: "You successfully",
-        html: "<h1>You successfully signed up baby!</h1>",
-      })
-      .then(() => {
-        console.log("Email sent");
-      })
+  
+  bycrpt
+  .hash(password, 12)
+  .then(hashedPassword => {
+    const user = new User({
+      email: email,
+      password: hashedPassword,
+      cart: { items: [] }
     });
+    return user.save();
   })
-  .catch(err => {
-    console.log(err);
-  });
+  .then(result => {
+    res.redirect('/login');
+    return sendMail.send({
+      to: email,
+      from: "rodrigo.ulloa@proton.me",
+      subject: "Signup succeeded! ",
+      text: "You successfully",
+      html: "<h1>You successfully signed up baby!</h1>",
+    })
+    .then(() => {
+      console.log("Email sent");
+    })
+  })
 };
 
 exports.postLogout = (req, res, next) => {
