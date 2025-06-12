@@ -53,7 +53,7 @@ router.post(
     .trim()
     .custom((value, {req}) => {
       if (value !== req.body.password){
-        throw Error('Password have to match!');
+        throw new Error('Password have to match!');
       }
       return true;
     })
