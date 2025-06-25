@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const {STRIPE} = process.env
+const stripe = require('stripe')(STRIPE);
 
 const PDFDocument = require('pdfkit');
 
@@ -131,6 +133,92 @@ exports.postCartDeleteProduct = (req, res, next) => {
     .removeFromCart(prodId)
     .then(result => {
       res.redirect('/cart');
+    })
+    .catch(err => {
+      const error = new Error(err)
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+
+exports.getCheckout = (req, res, next) => {
+  let products;
+  let totalSum = 0;
+  req.user
+    .populate('cart.items.productId')
+    .then(user => {
+      products = user.cart.items;
+      totalSum = products.reduce((sum, product) => {
+        return sum + product.quantity * product.productId.price;
+      }, 0);
+
+      return stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: products.map(product => {
+          return {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: product.productId.title,
+                description: product.productId.description,
+              }, 
+              unit_amount: product.productId.price * 100, // Stripe expects price in cents
+            },
+            quantity: product.quantity,
+          };
+        }),
+        mode: 'payment',
+        success_url: req.protocol + '://' + req.get('host') + '/checkout/success',
+        cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+      });
+    })
+    .then(session => {
+      res.render('shop/checkout', {
+        path: '/checkout',
+        pageTitle: 'Checkout',
+        products,
+        totalSum,
+        sessionId: session.id,
+        STRIPE_PUB_KEY: process.env.STRIPE_PUB_KEY,
+      });
+    })
+    .catch(err => {
+      console.error('Error:', err); // Log the actual error for debugging
+      if (err.type && err.type.includes('Stripe')) {
+        // Specific Stripe error handling
+        const error = new Error(`Stripe Error: ${err.message}`);
+        error.httpStatusCode = 502; // Bad Gateway (Stripe API issue)
+        return next(error);
+      }
+      // Generic error handling for other failures
+      const error = new Error('Populating cart details failed.');
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+}
+
+exports.getCheckoutSuccess = (req, res, next) => {
+  req.user
+    .populate('cart.items.productId')
+    .then(user => {
+      console.log(user.cart.items);
+      const products = user.cart.items.map(i => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          email: req.user.email,
+          userId: req.user
+        },
+        products: products
+      });
+      return order.save();
+    })
+    .then(result => {
+      return req.user.clearCart();
+    })
+    .then(() => {
+      res.redirect('/orders');
     })
     .catch(err => {
       const error = new Error(err)
